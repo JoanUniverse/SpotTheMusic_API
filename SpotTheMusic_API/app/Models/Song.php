@@ -11,4 +11,5 @@ class Song extends Model
 
     protected $table = 'songs';
     protected $primaryKey = 'id_song';
+    public $timestamps = false;
 }

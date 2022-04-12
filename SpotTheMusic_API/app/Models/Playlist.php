@@ -11,4 +11,5 @@ class Playlist extends Model
 
     protected $table = 'playlists';
     protected $primaryKey = 'id_playlist';
+    public $timestamps = false;
 }

@@ -11,4 +11,5 @@ class Message extends Model
 
     protected $table = 'messages';
     protected $primaryKey = 'id_message';
+    public $timestamps = false;
 }

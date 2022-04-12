@@ -11,4 +11,5 @@ class Role extends Model
 
     protected $table = 'roles';
     protected $primaryKey = 'id_rol';
+    public $timestamps = false;
 }

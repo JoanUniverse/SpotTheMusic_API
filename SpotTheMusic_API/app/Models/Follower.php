@@ -11,4 +11,5 @@ class Follower extends Model
 
     protected $table = 'followers';
     protected $primaryKey = 'id_follower';
+    public $timestamps = false;
 }
