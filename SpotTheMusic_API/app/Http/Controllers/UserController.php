@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -29,19 +30,33 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $user = new User();
+        $validation = Validator::make(
+            $request->all(),
+            [
+                'username' => 'required|unique:users,username',
+                'password' => 'required',
+                'email' => 'required|unique:users,email'
+            ]
+        );
 
-        $password = Hash::make($request->password);
+        if(!$validation->fails()){
+            $user = new User();
 
-        $user->name = $request->name;
-        $user->username = $request->username;
-        $user->email = $request->email;
-        $user->password = $password;
-        if ($user->save()) {
-            return response()->json(['status' => 'Created', 'result' => $user]);
+            $password = Hash::make($request->password);
+    
+            $user->name = $request->name;
+            $user->username = $request->username;
+            $user->email = $request->email;
+            $user->password = $password;
+            if ($user->save()) {
+                return response()->json(['status' => 'Created', 'result' => $user]);
+            } else {
+                return response()->json(['status' => 'Error while creating']);
+            }
         } else {
-            return response()->json(['status' => 'Error guardant']);
+            return response()->json($validation->getMessageBag());
         }
+
     }
 
     public function update(Request $request, $id)
