@@ -38,7 +38,7 @@ class EventController extends Controller
         if ($event->save()) {
             return response()->json(['status' => 'Created', 'result' => $event]);
         } else {
-            return response()->json(['status' => 'Error guardant']);
+            return response()->json(['status' => 'Error while saving']);
         }
     }
 

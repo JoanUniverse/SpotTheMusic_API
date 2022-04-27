@@ -49,6 +49,17 @@ Route::group(
     }
 );
 
+Route::group(
+    ['prefix' => 'followers'],
+    function () {
+        Route::get('', 'App\Http\Controllers\FollowerController@index');
+        Route::get('{id}', 'App\Http\Controllers\FollowerController@show');
+        Route::delete('{id}', 'App\Http\Controllers\FollowerController@delete');
+        Route::post('', 'App\Http\Controllers\FollowerController@store');
+        Route::put('{id}', 'App\Http\Controllers\FollowerController@update');
+    }
+);
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
