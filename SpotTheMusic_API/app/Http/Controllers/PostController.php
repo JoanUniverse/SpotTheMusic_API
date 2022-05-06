@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\Follower;
 use App\Http\Controllers\FollowerController;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
 
 class PostController extends Controller
 {
@@ -34,15 +35,15 @@ class PostController extends Controller
     public function showFollowed($id)
     {
         $followers = (new FollowerController)->showFollowsObject($id);
-        $posts = array();
+        $posts = new Collection();
         if(count($followers) === 0) return response()->json(['status' => 0, 'message' => 'You have no followers']);
         foreach ($followers as $follower) {
             $userPosts = $this->showObject($follower->userFollowed);
             if(count($userPosts) != 0){
-                array_push($posts, $userPosts);
+                $posts = $posts->merge($userPosts);
             }
         }
-        if(count($userPosts) === 0) return response()->json(['status' => 0, 'message' => 'No posts found :(']);
+        if(count($posts) === 0) return response()->json(['status' => 0, 'message' => 'No posts found :(']);
         return response()->json($posts);
     }
 
