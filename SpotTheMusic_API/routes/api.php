@@ -54,6 +54,7 @@ Route::group(
     function () {
         Route::get('', 'App\Http\Controllers\FollowerController@index');
         Route::get('{id}', 'App\Http\Controllers\FollowerController@show');
+        Route::get('{id}/follows', 'App\Http\Controllers\FollowerController@showFollows');
         Route::delete('{id}', 'App\Http\Controllers\FollowerController@delete');
         Route::post('', 'App\Http\Controllers\FollowerController@store');
         Route::put('{id}', 'App\Http\Controllers\FollowerController@update');
@@ -65,6 +66,7 @@ Route::group(
     function () {
         Route::get('', 'App\Http\Controllers\PostController@index');
         Route::get('{id}', 'App\Http\Controllers\PostController@show');
+        Route::get('{id}/follows', 'App\Http\Controllers\PostController@showFollowed');
         Route::delete('{id}', 'App\Http\Controllers\PostController@delete');
         Route::post('', 'App\Http\Controllers\PostController@store');
         Route::put('{id}', 'App\Http\Controllers\PostController@update');

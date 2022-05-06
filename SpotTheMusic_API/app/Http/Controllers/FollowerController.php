@@ -13,10 +13,25 @@ class FollowerController extends Controller
         return response()->json($followers);
     }
 
+    //Return all followers from 1 user
     public function show($id)
     {
         $followers = Follower::where("userFollowed", "=", $id)->get();
         return response()->json($followers);
+    }
+
+    //Return all users that 1 user follows
+    public function showFollows($id)
+    {
+        $followers = Follower::where("userFollows", "=", $id)->get();
+        return response()->json($followers);
+    }
+
+    //Return all users that 1 user follows (Objects)
+    public function showFollowsObject($id)
+    {
+        $followers = Follower::where("userFollows", "=", $id)->get();
+        return $followers;
     }
 
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Follower;
+use App\Http\Controllers\FollowerController;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -18,6 +20,29 @@ class PostController extends Controller
     public function show($id)
     {
         $posts = Post::where("user", "=", $id)->get();
+        return response()->json($posts);
+    }
+
+    //Returns all the posts from one user (Objects)
+    public function showObject($id)
+    {
+        $posts = Post::where("user", "=", $id)->get();
+        return $posts;
+    }
+
+    //Return all the posts from the users I follow
+    public function showFollowed($id)
+    {
+        $followers = (new FollowerController)->showFollowsObject($id);
+        $posts = array();
+        if(count($followers) === 0) return response()->json(['status' => 0, 'message' => 'You have no followers']);
+        foreach ($followers as $follower) {
+            $userPosts = $this->showObject($follower->userFollowed);
+            if(count($userPosts) != 0){
+                array_push($posts, $userPosts);
+            }
+        }
+        if(count($userPosts) === 0) return response()->json(['status' => 0, 'message' => 'No posts found :(']);
         return response()->json($posts);
     }
 
