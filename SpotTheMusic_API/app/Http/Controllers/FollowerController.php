@@ -34,6 +34,11 @@ class FollowerController extends Controller
         return $followers;
     }
 
+    //Return users that I don't follow
+    public function showNewFollowers($id){
+        $followers = Follower::where("userFollows", "!=", $id)->where("userFollowed", "!=", $id)->get();
+        return response()->json($followers);
+    }
 
     public function delete($id)
     {

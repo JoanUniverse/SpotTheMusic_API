@@ -55,6 +55,7 @@ Route::group(
         Route::get('', 'App\Http\Controllers\FollowerController@index');
         Route::get('{id}', 'App\Http\Controllers\FollowerController@show');
         Route::get('{id}/follows', 'App\Http\Controllers\FollowerController@showFollows');
+        Route::get('{id}/new', 'App\Http\Controllers\FollowerController@showNewFollowers');
         Route::delete('{id}', 'App\Http\Controllers\FollowerController@delete');
         Route::post('', 'App\Http\Controllers\FollowerController@store');
         Route::put('{id}', 'App\Http\Controllers\FollowerController@update');

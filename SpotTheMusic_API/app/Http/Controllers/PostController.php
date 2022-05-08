@@ -13,7 +13,7 @@ class PostController extends Controller
     //Return all the posts
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::orderBy('date', 'DESC')->get();
         return response()->json($posts);
     }
 
