@@ -74,6 +74,15 @@ Route::group(
     }
 );
 
+Route::group(
+    ['prefix' => 'messages'],
+    function () {
+        Route::get('{idFrom}/{idTo}', 'App\Http\Controllers\MessageController@index');
+        Route::delete('{id}', 'App\Http\Controllers\MessageController@delete');
+        Route::post('', 'App\Http\Controllers\MessageController@store');
+    }
+);
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
