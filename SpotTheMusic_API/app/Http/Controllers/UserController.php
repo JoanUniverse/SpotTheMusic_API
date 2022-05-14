@@ -68,4 +68,22 @@ class UserController extends Controller
             return response()->json(['status' => 'Error while modifying']);
         }
     }
+
+    public function picture(Request $request, $id)
+    {
+        $validation = Validator::make($request->all(), [
+            'picture' => 'required|mimes:jpeg,jpg,bmp,png|max:10240',
+        ]);
+        $user = User::findOrFail($id);
+        if (!$validation->fails()) {
+            $filename = "user$id" . "_" . time() . "." . $request->picture->extension();
+            $request->picture->move(public_path('user_images'), $filename);
+            $urifoto = url('user_images') . '/' . $filename;
+            $user->picture = $urifoto;
+            $user->save();
+            return response()->json(['status' => 'Image uploaded successfully', 'uri' => $urifoto], 200);
+        } else {
+            return response()->json(['status' => 'Error: wrong type or size'], 404);
+        }
+    }
 }

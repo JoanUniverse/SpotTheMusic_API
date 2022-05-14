@@ -46,6 +46,7 @@ Route::group(
         Route::delete('{id}', 'App\Http\Controllers\UserController@delete');
         Route::post('', 'App\Http\Controllers\UserController@store');
         Route::put('{id}', 'App\Http\Controllers\UserController@update');
+        Route::post('{id}/image', 'App\Http\Controllers\UserController@picture');
     }
 );
 
