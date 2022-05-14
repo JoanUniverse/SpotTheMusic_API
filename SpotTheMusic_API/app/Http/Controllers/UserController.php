@@ -86,4 +86,15 @@ class UserController extends Controller
             return response()->json(['status' => 'Error: wrong type or size'], 404);
         }
     }
+
+    public function location(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $user->location = $request->location;
+        if($user->save()){
+            return response()->json(['status' => 1, 'result' => $user]);
+        } else {
+            return response()->json(['status' => 0, 'result' => 'Could not update user location']);
+        }
+    }
 }
