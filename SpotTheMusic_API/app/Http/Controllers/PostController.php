@@ -44,7 +44,7 @@ class PostController extends Controller
             }
         }
         if(count($posts) === 0) return response()->json(['status' => 0, 'message' => 'No posts found :(']);
-        return response()->json($posts);
+        return response()->json($posts->sortByDesc('date')->values());
     }
 
     //Deletes one post
