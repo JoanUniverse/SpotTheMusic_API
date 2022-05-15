@@ -40,11 +40,12 @@ class FollowerController extends Controller
         return response()->json($followers);
     }
 
-    public function delete($id)
+    //Unfollows
+    public function delete($idFrom, $idTo)
     {
-        $follower = Follower::findOrFail($id);
-        $follower->delete();
-        return response()->json(['status' => $id . ' Deleted successfully'], 200);
+        $follower = Follower::where("userFollows", "=", $idFrom)->where("userFollowed", "=", $idTo);
+        if($follower->delete()) return response()->json(['status' => 1, 'result' => 'Unfollowed successfully'], 200);
+        return response()->json(['status' => 0, 'result' => 'Not found'], 404);
     }
 
     public function store(Request $request)
@@ -53,19 +54,9 @@ class FollowerController extends Controller
         $follower->userFollows = $request->userFollows;
         $follower->userFollowed = $request->userFollowed;
         if ($follower->save()) {
-            return response()->json(['status' => 'Created', 'result' => $follower]);
+            return response()->json(['status' => 1, 'result' => $follower]);
         } else {
-            return response()->json(['status' => 'Error while saving']);
-        }
-    }
-
-    public function update(Request $request, $id)
-    {
-        $follower = Follower::findOrFail($id);
-        if ($follower->update($request->all())) {
-            return response()->json(['status' => 'Modified successfully', 'result' => $follower]);
-        } else {
-            return response()->json(['status' => 'Error while modifying']);
+            return response()->json(['status' => 0, 'result' => 'Error while saving']);
         }
     }
 }
