@@ -6,21 +6,25 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserController extends Controller
 {
+    //List all users
     public function index()
     {
         $users = User::all();
         return response()->json($users);
     }
 
+    //Gets all the info form one user
     public function show($id)
     {
         $user = User::findOrFail($id);
         return response()->json($user);
     }
 
+    //Deletes one user
     public function delete($id)
     {
         $user = User::findOrFail($id);
@@ -28,6 +32,7 @@ class UserController extends Controller
         return response()->json(['status' => $id . ' Deleted successfully'], 200);
     }
 
+    //Creates one user and Ecryps password
     public function store(Request $request)
     {
         $validation = Validator::make(
@@ -59,6 +64,7 @@ class UserController extends Controller
 
     }
 
+    //Modify one user
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -69,6 +75,7 @@ class UserController extends Controller
         }
     }
 
+    //Uploads a picture for one user
     public function picture(Request $request, $id)
     {
         $validation = Validator::make($request->all(), [
@@ -87,6 +94,7 @@ class UserController extends Controller
         }
     }
 
+    //Modifies the location of a user
     public function location(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -96,5 +104,33 @@ class UserController extends Controller
         } else {
             return response()->json(['status' => 0, 'result' => 'Could not update user location']);
         }
+    }
+
+    //Gets all users that are nearby
+    public function nearUsers($id)
+    {
+        $range = 0.5;
+
+        $user = User::findOrFail($id);
+        $location = $user->location;
+        if (!$user->allowLocation) return response()->json(['status' => 'This user has not allowed location term'], 403);
+        if (!$location) return response()->json(['status' => 'This user has no location'], 404);
+        $parts = explode(",", $location);
+        $minLatitude = floatval($parts[0]) - $range;
+        $maxLatitude = floatval($parts[0]) + $range;
+        $minLongitude = floatval($parts[1]) - $range;
+        $maxLongitude = floatval($parts[1]) + $range;
+
+        $users = User::where("location", "!=", null)->where("id_user", "!=", $id)->get();
+        $result = new Collection();
+        foreach ($users as $u) {
+            $locParts = explode(",", $u->location);
+            if ((floatval($locParts[0]) > $minLatitude && floatval($locParts[0]) < $maxLatitude) && (floatval($locParts[1]) > $minLongitude && floatval($locParts[1]) < $maxLongitude)){
+                $result->add($u);
+            }
+        }
+
+        if(!count($result)) return response()->json(['status' => 0, 'message' => 'No users nearby'], 404);
+        return response()->json(['status' => 1, 'result' => $result]);
     }
 }
