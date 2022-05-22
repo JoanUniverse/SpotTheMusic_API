@@ -107,21 +107,23 @@ class UserController extends Controller
     }
 
     //Gets all users that are nearby
-    public function nearUsers($id)
+    public function nearUsers($id, $value)
     {
-        $range = 0.5;
+        if($value > 2 || $value < 0) return response()->json(['status' => 'Range value must be -> 0, 1 or 2'], 403);
+
+        $range = array(0.2, 0.5, 1.0);
 
         $user = User::findOrFail($id);
         $location = $user->location;
         if (!$user->allowLocation) return response()->json(['status' => 'This user has not allowed location term'], 403);
         if (!$location) return response()->json(['status' => 'This user has no location'], 404);
         $parts = explode(",", $location);
-        $minLatitude = floatval($parts[0]) - $range;
-        $maxLatitude = floatval($parts[0]) + $range;
-        $minLongitude = floatval($parts[1]) - $range;
-        $maxLongitude = floatval($parts[1]) + $range;
+        $minLatitude = floatval($parts[0]) - $range[$value];
+        $maxLatitude = floatval($parts[0]) + $range[$value];
+        $minLongitude = floatval($parts[1]) - $range[$value];
+        $maxLongitude = floatval($parts[1]) + $range[$value];
 
-        $users = User::where("location", "!=", null)->where("id_user", "!=", $id)->get();
+        $users = User::where("location", "!=", null)->where("allowLocation", "!=", 0)->where("id_user", "!=", $id)->get();
         $result = new Collection();
         foreach ($users as $u) {
             $locParts = explode(",", $u->location);
