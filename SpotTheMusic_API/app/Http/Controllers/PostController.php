@@ -36,7 +36,8 @@ class PostController extends Controller
     {
         $followers = (new FollowerController)->showFollowsObject($id);
         $posts = new Collection();
-        if(count($followers) === 0) return response()->json(['status' => 0, 'message' => 'You have no followers']);
+        $posts = $posts->merge($this->showObject($id));
+        //if(count($followers) === 0) return response()->json(['status' => 0, 'message' => 'You have no followers']);
         foreach ($followers as $follower) {
             $userPosts = $this->showObject($follower->userFollowed);
             if(count($userPosts) != 0){
