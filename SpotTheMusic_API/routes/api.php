@@ -79,7 +79,8 @@ Route::group(
 Route::group(
     ['prefix' => 'messages'],
     function () {
-        Route::get('{idFrom}/{idTo}', 'App\Http\Controllers\MessageController@index');
+        Route::get('/chat/{idFrom}/{idTo}', 'App\Http\Controllers\MessageController@index');
+        Route::get('/list/{idUser}', 'App\Http\Controllers\MessageController@indexList');
         Route::delete('{id}', 'App\Http\Controllers\MessageController@delete');
         Route::post('', 'App\Http\Controllers\MessageController@store');
     }
