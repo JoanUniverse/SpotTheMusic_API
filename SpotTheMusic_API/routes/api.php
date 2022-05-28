@@ -73,6 +73,7 @@ Route::group(
         Route::delete('{id}', 'App\Http\Controllers\PostController@delete');
         Route::post('', 'App\Http\Controllers\PostController@store');
         Route::put('{id}', 'App\Http\Controllers\PostController@update');
+        Route::get('/like/{idPost}/{idUser}', 'App\Http\Controllers\PostController@likeDislike');
     }
 );
 

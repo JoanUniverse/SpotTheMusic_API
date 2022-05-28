@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\Follower;
 use App\Http\Controllers\FollowerController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -77,5 +78,17 @@ class PostController extends Controller
         } else {
             return response()->json(['status' => 'Error while modifying']);
         }
+    }
+
+    //Likes/Dislikes a Post
+    public function likeDislike($idPost, $idUser)
+    {
+        $like = DB::select("SELECT * FROM post_likes where post_id = $idPost AND user_id = $idUser");
+        if(!$like){
+            DB::insert('insert into post_likes (post_id, user_id) values (?, ?)', [$idPost, $idUser]);
+            return response()->json(['status' => 1, 'message' => 'Post liked']);
+        }
+        DB::delete("delete from post_likes where post_id = $idPost and user_id = $idUser");
+        return response()->json(['status' => 1, 'message' => 'Post disliked :(']);
     }
 }
