@@ -86,9 +86,11 @@ class PostController extends Controller
         $like = DB::select("SELECT * FROM post_likes where post_id = $idPost AND user_id = $idUser");
         if(!$like){
             DB::insert('insert into post_likes (post_id, user_id) values (?, ?)', [$idPost, $idUser]);
-            return response()->json(['status' => 1, 'message' => 'Post liked']);
+            $post = Post::findOrFail($idPost);
+            return response()->json(['status' => 1, 'message' => 'Post liked', 'post' => $post]);
         }
         DB::delete("delete from post_likes where post_id = $idPost and user_id = $idUser");
-        return response()->json(['status' => 1, 'message' => 'Post disliked :(']);
+        $post = Post::findOrFail($idPost);
+        return response()->json(['status' => 1, 'message' => 'Post disliked :(', 'post' => $post]);
     }
 }
