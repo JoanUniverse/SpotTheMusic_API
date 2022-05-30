@@ -24,6 +24,7 @@ Route::group(
         Route::delete('{id}', 'App\Http\Controllers\CategoryController@delete');
         Route::post('', 'App\Http\Controllers\CategoryController@store');
         Route::put('{id}', 'App\Http\Controllers\CategoryController@update');
+        Route::get('/user/{idUser}/{idCategory}', 'App\Http\Controllers\CategoryController@AddRemove');
     }
 );
 
