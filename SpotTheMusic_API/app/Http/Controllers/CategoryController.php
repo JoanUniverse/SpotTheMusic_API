@@ -14,10 +14,14 @@ class CategoryController extends Controller
         return response()->json($categories);
     }
 
+    //All categories that 1 user follows
     public function show($id)
     {
-        $category = Category::findOrFail($id);
-        return response()->json($category);
+        $category = Category::join('user_category', 'user_category.id_category', '=', 'categories.id_category')
+                            ->where('user_category.id_user', '=', $id)
+                            ->get();
+        if(!count($category)) return response()->json(['status' => 0, 'result' => 'This user has no categories']);
+        return response()->json(['status' => 1, 'result' => $category]);
     }
 
     public function delete($id)
@@ -34,7 +38,7 @@ class CategoryController extends Controller
         if ($category->save()) {
             return response()->json(['status' => 'Created', 'result' => $category]);
         } else {
-            return response()->json(['status' => 'Error guardant']);
+            return response()->json(['status' => 'Error while saving']);
         }
     }
 
