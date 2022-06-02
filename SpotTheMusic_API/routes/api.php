@@ -88,6 +88,15 @@ Route::group(
     }
 );
 
+Route::group(
+    ['prefix' => 'songs'],
+    function () {
+        Route::get('', 'App\Http\Controllers\SongController@index');
+        Route::get('{id}', 'App\Http\Controllers\SongController@show');
+        Route::post('', 'App\Http\Controllers\SongController@store');
+    }
+);
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
