@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -22,6 +23,23 @@ class CategoryController extends Controller
                             ->get();
         if(!count($category)) return response()->json(['status' => 0, 'result' => 'This user has no categories']);
         return response()->json(['status' => 1, 'result' => $category]);
+    }
+
+    //Users that have categories in common
+    public function showCommon($idUser)
+    {
+        $categories = Category::select('user_category.id_category')
+                            ->join('user_category', 'user_category.id_category', '=', 'categories.id_category')
+                            ->where('user_category.id_user', '=', $idUser)
+                            ->get();
+        if(!count($categories)) return response()->json(['status' => 0, 'result' => 'This user has no categories']);
+
+        $users = User::join('user_category', 'user_category.id_user', '=', 'users.id_user')
+                            ->where('user_category.id_user', '!=', $idUser)
+                            ->whereIn('user_category.id_category', $categories)
+                            ->get();
+        if(!count($users)) return response()->json(['status' => 0, 'result' => 'No users found']);
+        return response()->json(['status' => 1, 'result' => $users->unique()]);
     }
 
     public function delete($id)

@@ -20,6 +20,7 @@ Route::group(
     ['prefix' => 'categories'],
     function () {
         Route::get('', 'App\Http\Controllers\CategoryController@index');
+        Route::get('/common/{idUser}', 'App\Http\Controllers\CategoryController@showCommon');
         Route::get('{id}', 'App\Http\Controllers\CategoryController@show');
         Route::delete('{id}', 'App\Http\Controllers\CategoryController@delete');
         Route::post('', 'App\Http\Controllers\CategoryController@store');
