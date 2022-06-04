@@ -93,4 +93,18 @@ class PostController extends Controller
         $post = Post::findOrFail($idPost);
         return response()->json(['status' => 1, 'message' => 'Post disliked :(', 'post' => $post]);
     }
+
+    //Spot a Post
+    public function spotPost($idPost, $idUser)
+    {
+        $like = DB::select("SELECT * FROM post_reposts where post_id = $idPost AND user_id = $idUser");
+        if(!$like){
+            DB::insert('insert into post_reposts (post_id, user_id) values (?, ?)', [$idPost, $idUser]);
+            $post = Post::findOrFail($idPost);
+            return response()->json(['status' => 1, 'message' => 'Post spotted', 'post' => $post]);
+        }
+        DB::delete("delete from post_reposts where post_id = $idPost and user_id = $idUser");
+        $post = Post::findOrFail($idPost);
+        return response()->json(['status' => 1, 'message' => 'Post no longer spotted', 'post' => $post]);
+    }
 }
