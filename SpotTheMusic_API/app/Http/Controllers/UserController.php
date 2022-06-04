@@ -107,8 +107,9 @@ class UserController extends Controller
     }
 
     //Gets all users that are nearby
-    public function nearUsers($id, $value)
+    public function nearUsers(Request $request, $id)
     {
+        $value = $request->distance;
         if($value > 2 || $value < 0) return response()->json(['status' => 'Range value must be -> 0, 1 or 2'], 403);
 
         $range = array(0.2, 0.5, 1.0);

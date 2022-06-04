@@ -50,7 +50,7 @@ Route::group(
         Route::put('{id}', 'App\Http\Controllers\UserController@update');
         Route::put('{id}/location', 'App\Http\Controllers\UserController@location');
         Route::post('{id}/image', 'App\Http\Controllers\UserController@picture');
-        Route::get('{id}/nearby/{value}', 'App\Http\Controllers\UserController@nearUsers');
+        Route::post('/nearby/{id}', 'App\Http\Controllers\UserController@nearUsers');
     }
 );
 
