@@ -75,6 +75,7 @@ Route::group(
         Route::post('', 'App\Http\Controllers\PostController@store');
         Route::put('{id}', 'App\Http\Controllers\PostController@update');
         Route::get('/like/{idPost}/{idUser}', 'App\Http\Controllers\PostController@likeDislike');
+        Route::get('/spot/{idPost}/{idUser}', 'App\Http\Controllers\PostController@spotPost');
     }
 );
 
