@@ -94,6 +94,7 @@ Route::group(
     ['prefix' => 'songs'],
     function () {
         Route::get('', 'App\Http\Controllers\SongController@index');
+        Route::get('/name/{name}', 'App\Http\Controllers\SongController@indexName');
         Route::get('{id}', 'App\Http\Controllers\SongController@show');
         Route::post('', 'App\Http\Controllers\SongController@store');
     }

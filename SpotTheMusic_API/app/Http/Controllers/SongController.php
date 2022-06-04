@@ -15,6 +15,14 @@ class SongController extends Controller
         return response()->json($songs);
     }
 
+    //List of songs by name
+    public function indexName($name)
+    {
+        $songs = Song::where('name', 'like', '%' . $name . '%')
+                        ->get();
+        return response()->json($songs);
+    }
+
     //Gets all the info form one song
     public function show($id)
     {
