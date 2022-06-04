@@ -31,17 +31,24 @@ class SongController extends Controller
 
         $validation = Validator::make($request->all(), [
             'link' => 'required|mimes:audio/mpeg,mpga,mp3,wav,aac|max:10240',
+            'song_picture' => 'required|mimes:jpeg,jpg,bmp,png|max:10240',
         ]);
 
         if (!$validation->fails()) {
-            $filename = "song$request->name" . "_" . time() . "." . $request->link->extension();
-            $request->link->move(public_path('artist_songs'), $filename);
-            $urisong = url('artist_songs') . '/' . $filename;
+            $filenameSong = "song$request->name" . "_" . time() . "." . $request->link->extension();
+            $request->link->move(public_path('artist_songs'), $filenameSong);
+            $urisong = url('artist_songs') . '/' . $filenameSong;
+
+            $filenamePic = "img$request->name" . "_" . time() . "." . $request->song_picture->extension();
+            $request->song_picture->move(public_path('song_images'), $filenamePic);
+            $uripic = url('artist_songs') . '/' . $filenamePic;
+
             $song->link = $urisong;
+            $song->song_picture = $uripic;
             $song->save();
             return response()->json(['status' => 'Song uploaded successfully', 'uri' => $urisong], 200);
         } else {
-            return response()->json(['status' => 'Error saving song'], 404);
+            return response()->json(['status' => 'Error saving song', $song], 404);
         }
     }
 }
