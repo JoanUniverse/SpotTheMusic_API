@@ -135,12 +135,12 @@ class UserController extends Controller
                 if(!$request->categories){
                     $result->add($u);
                 }else{
-                    if($usersWithCategories->contains($u->id_user, )) $result->add($u);
+                    if($usersWithCategories->contains($u->id_user)) $result->add($u);
                 }               
             }
         }
 
-        if(!count($result)) return response()->json(['status' => 0, 'message' => 'No users nearby', "users" => $usersWithCategories], 404);
+        if(!count($result)) return response()->json(['status' => 0, 'message' => 'No users nearby'], 404);
         return response()->json(['status' => 1, 'result' => $result]);
     }
 }
