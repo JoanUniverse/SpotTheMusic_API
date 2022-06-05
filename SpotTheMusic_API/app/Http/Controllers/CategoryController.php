@@ -42,6 +42,15 @@ class CategoryController extends Controller
         return response()->json(['status' => 1, 'result' => $users->unique()]);
     }
 
+    public function usersWithCategoryIds($categories)
+    {
+        $users = User::select('users.id_user')
+                        ->join('user_category', 'user_category.id_user', '=', 'users.id_user')
+                        ->whereIn('user_category.id_category',  explode(",", $categories))
+                        ->distinct()->pluck('users.id_user');
+        return $users;
+    }
+
     public function delete($id)
     {
         $category = Category::findOrFail($id);

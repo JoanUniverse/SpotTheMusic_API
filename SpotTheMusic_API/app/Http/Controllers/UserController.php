@@ -124,16 +124,23 @@ class UserController extends Controller
         $minLongitude = floatval($parts[1]) - $range[$value];
         $maxLongitude = floatval($parts[1]) + $range[$value];
 
+        $usersWithCategories = array();
+        if($request->categories) $usersWithCategories = (new CategoryController)->usersWithCategoryIds($request->categories);
+
         $users = User::where("location", "!=", null)->where("allowLocation", "!=", 0)->where("id_user", "!=", $id)->get();
         $result = new Collection();
         foreach ($users as $u) {
             $locParts = explode(",", $u->location);
             if ((floatval($locParts[0]) > $minLatitude && floatval($locParts[0]) < $maxLatitude) && (floatval($locParts[1]) > $minLongitude && floatval($locParts[1]) < $maxLongitude)){
-                $result->add($u);
+                if(!$request->categories){
+                    $result->add($u);
+                }else{
+                    if($usersWithCategories->contains($u->id_user, )) $result->add($u);
+                }               
             }
         }
 
-        if(!count($result)) return response()->json(['status' => 0, 'message' => 'No users nearby'], 404);
+        if(!count($result)) return response()->json(['status' => 0, 'message' => 'No users nearby', "users" => $usersWithCategories], 404);
         return response()->json(['status' => 1, 'result' => $result]);
     }
 }
