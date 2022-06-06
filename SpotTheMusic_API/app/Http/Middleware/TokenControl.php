@@ -20,11 +20,11 @@ class TokenControl
         if ($request->header('Authorization')) { 
             $key = explode(' ',$request->header('Authorization'));
             $token = $key[1];
-            $ara = date("Y-m-d H:i:s");
+            $now = date("Y-m-d H:i:s");
             $user = User::where('token', $token)->first();
             if(!empty($user)){
-                if($user->token_valid_fins > $ara){
-                    $limit = date("Y-m-d H:i:s",strtotime('+30 minutes'));
+                if($user->token_expire > $now){
+                    $limit = date("Y-m-d H:i:s",strtotime('+150 minutes'));
                     $user->token_expire = $limit;
                     $user->save();
                     return $next($request);
