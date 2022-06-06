@@ -49,6 +49,7 @@ Route::group(
         Route::post('', 'App\Http\Controllers\UserController@store');
         Route::put('{id}', 'App\Http\Controllers\UserController@update');
         Route::put('{id}/location', 'App\Http\Controllers\UserController@location');
+        Route::put('{id}/music', 'App\Http\Controllers\UserController@listeningNow');
         Route::post('{id}/image', 'App\Http\Controllers\UserController@picture');
         Route::post('/nearby/{id}', 'App\Http\Controllers\UserController@nearUsers');
     }

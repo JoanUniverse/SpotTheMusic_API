@@ -106,6 +106,18 @@ class UserController extends Controller
         }
     }
 
+    //Modifies the location of a user
+    public function listeningNow(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $user->listening_now = $request->listening_now;
+        if($user->save()){
+            return response()->json(['status' => 1, 'result' => $user]);
+        } else {
+            return response()->json(['status' => 0, 'result' => 'Could not update user music']);
+        }
+    }
+
     //Gets all users that are nearby
     public function nearUsers(Request $request, $id)
     {
