@@ -24,4 +24,18 @@ class LoginController extends Controller
             return response()->json(['status' => 0, 'message' => 'fail'], 401);
         }
     }
+
+    public function logout(Request $request)
+    {
+        $key = explode(' ',$request->header('Authorization'));
+        $token=$key[1];
+        $user = User::where('token',$token)->first();
+        if ($user["token"] == $token) {
+            $user->token = null;
+            $user->save();
+            return response()->json(['status' => 1, 'message' => 'Token deleted'], 200);
+        } else {
+            return response()->json(['status' => 0, 'message' => 'Fail.']);
+        }
+    }
 }

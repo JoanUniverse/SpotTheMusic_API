@@ -18,6 +18,7 @@ Route::post('login', 'App\Http\Controllers\LoginController@login');
 Route::post('users', 'App\Http\Controllers\UserController@store');
 
 Route::group(['middleware' => 'token'], function () {
+    Route::post('logout', 'App\Http\Controllers\LoginController@logout');
     Route::group(
         ['prefix' => 'categories'],
         function () {
