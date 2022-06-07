@@ -12,7 +12,7 @@ class SongController extends Controller
     public function index()
     {
         $songs = Song::all();
-        return response()->json($songs);
+        return response()->json($songs->shuffle());
     }
 
     //List of songs by name
