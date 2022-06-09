@@ -64,6 +64,7 @@ Route::group(['middleware' => 'token'], function () {
             Route::get('{id}', 'App\Http\Controllers\FollowerController@show');
             Route::get('{id}/follows', 'App\Http\Controllers\FollowerController@showFollows');
             Route::get('{id}/new', 'App\Http\Controllers\FollowerController@showNewFollowers');
+            Route::get('{idFrom}/{idTo}', 'App\Http\Controllers\FollowerController@showFollowUser');
             Route::delete('{idFrom}/{idTo}', 'App\Http\Controllers\FollowerController@delete');
             Route::post('', 'App\Http\Controllers\FollowerController@store');
         }

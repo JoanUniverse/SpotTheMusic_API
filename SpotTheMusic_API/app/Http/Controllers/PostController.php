@@ -22,7 +22,9 @@ class PostController extends Controller
     public function show($id)
     {
         $posts = Post::where("user", "=", $id)->get();
-        return response()->json($posts);
+        $reposts = Post::join('post_reposts', 'post_reposts.post_id', '=', 'posts.id_post')
+                    ->where('post_reposts.user_id', '=', $id)->get();
+        return response()->json($posts->merge($reposts)->sortByDesc('date')->values());
     }
 
     //Returns all the posts from one user (Objects)
