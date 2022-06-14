@@ -39,12 +39,12 @@ class SongController extends Controller
 
         if($request->song_picture){
             $validation = Validator::make($request->all(), [
-                'link' => 'required|mimes:audio/mpeg,mpga,mp3,wav,aac|max:10240',
+                'link' => 'required|mimes:mpga,wav,mp3,mpeg,mp4|max:10240',
                 'song_picture' => 'required|mimes:jpeg,jpg,bmp,png|max:10240',
             ]);
         } else{
             $validation = Validator::make($request->all(), [
-                'link' => 'required|mimes:audio/mpeg,mpga,mp3,wav,aac|max:10240',
+                'link' => 'required|mimes:mpga,wav,mp3,mpeg,mp4|max:10240',
             ]);
         }
 
@@ -66,7 +66,7 @@ class SongController extends Controller
             $song->save();
             return response()->json(['status' => 'Song uploaded successfully', 'uri' => $urisong], 200);
         } else {
-            return response()->json(['status' => 'Error saving song', "message" => $request->song_picture], 404);
+            return response()->json(['status' => "File extension -> " . $request->link->extension(), "message" => $validation->getMessageBag()], 404);
         }
     }
 }

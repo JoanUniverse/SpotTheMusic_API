@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Validator;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
@@ -35,18 +36,39 @@ class EventController extends Controller
         $event->artist = $request->artist;
         $event->event_date = $request->event_date;
         $event->price = $request->price;
-        if ($event->save()) {
-            return response()->json(['status' => 'Created', 'result' => $event]);
+
+
+        $validation = Validator::make($request->all(), [
+            'picture' => 'required|mimes:jpeg,jpg,bmp,png|max:10240',
+        ]);
+
+
+        if (!$validation->fails()) {
+            $picture = "img$request->name" . "_" . time() . "." . $request->picture->extension();
+            $request->picture->move(public_path('event_images'), $picture);
+            $uriPicture = url('event_images') . '/' . $picture;
+            $event->picture = $uriPicture;
+            if ($event->save()) {
+                return response()->json(['status' => 'Created', 'result' => $event]);
+            }
         } else {
-            return response()->json(['status' => 'Error while saving']);
+            return response()->json(['status' => "File extension -> " . $request->picture->extension(), $validation->getMessageBag()]);
         }
     }
 
     public function update(Request $request, $id)
     {
         $event = Event::findOrFail($id);
-        if ($event->update($request->all())) {
-            return response()->json(['status' => 'Modified successfully', 'result' => $event]);
+
+        $event->name = $request->name;
+        $event->description = $request->description;
+        $event->location = $request->location;
+        $event->artist = $request->artist;
+        $event->event_date = $request->event_date;
+        $event->price = $request->price;
+
+        if ($event->save()) {
+            return response()->json(['status' => "Modified", 'result' => $event]);
         } else {
             return response()->json(['status' => 'Error while modifying']);
         }

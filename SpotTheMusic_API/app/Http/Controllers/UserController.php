@@ -40,7 +40,7 @@ class UserController extends Controller
             [
                 'username' => 'required|unique:users,username',
                 'password' => 'required',
-                'email' => 'required|unique:users,email'
+                'email' => 'required|email|unique:users,email'
             ]
         );
 
@@ -122,6 +122,14 @@ class UserController extends Controller
     public function nearUsers(Request $request, $id)
     {
         $value = $request->distance;
+        if($value === 3) {
+            $user = User::findOrFail($id);
+            $location = $user->location;
+            if (!$user->allowLocation) return response()->json(['status' => 'This user has not allowed location term'], 403);
+            if (!$location) return response()->json(['status' => 'This user has no location'], 404);
+            $users = User::where("location", "!=", null)->where("allowLocation", "!=", 0)->where("id_user", "!=", $id)->get();
+            return response()->json(['status' => 1, 'result' => $users]);
+        }
         if($value > 2 || $value < 0) return response()->json(['status' => 'Range value must be -> 0, 1 or 2'], 403);
 
         $range = array(0.2, 0.5, 1.0);
